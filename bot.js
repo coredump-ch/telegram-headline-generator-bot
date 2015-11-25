@@ -14,7 +14,7 @@ bot.onText(/^\/start(@HeadlineGeneratorBot)?$/, function(message, match) {
 
 bot.onText(/^\/help(@HeadlineGeneratorBot)?$/, function(message, match) {
   var chatId = message.chat.id;
-  bot.sendMessage(chatId, 'Not helpful.');
+  bot.sendMessage(chatId, 'Headline Generator nimmt die Schlagzeilen einer Schweizer Abendzeitung und analysiert sie per Markov-Chain (für jedes Wort und jede Wortgruppe wird die Wahrscheinlichkeit berechnet, welche Wörter anschliessend folgen können) um so neue Schlagzeilen zu erzeugen. Dadurch entsteht viel Unsinn, aber manchmal … 😊 Übrigens kam keine Schlagzeile so in der Zeitung vor – das wird auch geprüft.\n\nNutzen mit: /generate');
 });
 
 bot.onText(/^\/generate(@HeadlineGeneratorBot)?( (\d+))?$/, function(message, match) {
