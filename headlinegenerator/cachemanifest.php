@@ -3,8 +3,8 @@
 ?>
 CACHE MANIFEST
 
-# Generator v7
-# Headlines v20
+# Generator v8
+# Headlines v22
 
 index.php
 scripts.js

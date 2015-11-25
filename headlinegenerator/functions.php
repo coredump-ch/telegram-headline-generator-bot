@@ -64,9 +64,9 @@ function getHeadlineTokens($followers, $history, $hadPart2) {
 	
 	$randomizer = array();
 	$randomizer = array_merge($randomizer, getFollowerCollection($currentFollowers, 0, 1, true));
-	$randomizer = array_merge($randomizer, getFollowerCollection($currentFollowers, 1, 3, false));
-	$randomizer = array_merge($randomizer, getFollowerCollection($currentFollowers, 2, 2, false));
-	$randomizer = array_merge($randomizer, getFollowerCollection($currentFollowers, 3, 1, false));
+	$randomizer = array_merge($randomizer, getFollowerCollection($currentFollowers, 1, 2.5, false));
+	$randomizer = array_merge($randomizer, getFollowerCollection($currentFollowers, 2, 2.5, false));
+	$randomizer = array_merge($randomizer, getFollowerCollection($currentFollowers, 3, 1.5, false));
 	shuffle($randomizer);
 
 	while (true) {
