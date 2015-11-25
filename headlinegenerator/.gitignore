@@ -1,0 +1,10 @@
+1_getHeadlines.js
+# If everyone would fetch the headlines from
+# the website that would be like a DDoS.
+# So please don't.
+
+loading_icon_testpage.html
+# No need for that.
+
+node_modules/
+# You can get that by yourself.
