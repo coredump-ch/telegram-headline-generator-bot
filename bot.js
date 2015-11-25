@@ -78,9 +78,9 @@ function getHeadlineTokens(history, hadPart2) {
 	
 	var randomizer = [];
 	randomizer = randomizer.concat(getFollowerCollection(currentFollowers, 0, 1, true));
-	randomizer = randomizer.concat(getFollowerCollection(currentFollowers, 1, 3, false));
-	randomizer = randomizer.concat(getFollowerCollection(currentFollowers, 2, 3, false));
-	randomizer = randomizer.concat(getFollowerCollection(currentFollowers, 3, 2, false));
+	randomizer = randomizer.concat(getFollowerCollection(currentFollowers, 1, 2.5, false));
+	randomizer = randomizer.concat(getFollowerCollection(currentFollowers, 2, 2.5, false));
+	randomizer = randomizer.concat(getFollowerCollection(currentFollowers, 3, 1.5, false));
 
 	while (true) {
 		if (!randomizer.length) {
