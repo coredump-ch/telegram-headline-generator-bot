@@ -3,10 +3,12 @@
 ?>
 CACHE MANIFEST
 
-# Generator v8
+# Generator v9
 # Headlines v22
 
 index.php
 scripts.js
+generator_functions.js
 followers.json
 headlines.json
+
