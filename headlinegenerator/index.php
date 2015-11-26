@@ -95,6 +95,7 @@
 		}
 	</style>
 	<h1 hidden>Headline Generator</h1>
+	<script src="generator_functions.js"></script>
 	<script src="scripts.js"></script>
 	<div id=headlines class=loading></div>
 	<p>Headline Generator nimmt die Schlagzeilen einer Schweizer Abendzeitung und analysiert sie per Markov-Chain (für jedes Wort und jede Wortgruppe wird die Wahrscheinlichkeit berechnet, welche Wörter anschliessend folgen können) um so neue Schlagzeilen zu erzeugen. Dadurch entsteht viel Unsinn, aber manchmal … :-) Übrigens kam keine Schlagzeile so in der Zeitung vor – das wird auch geprüft.</p>
