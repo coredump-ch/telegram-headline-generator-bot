@@ -4,7 +4,7 @@
 CACHE MANIFEST
 
 # Generator v9
-# Headlines v22
+# Headlines v24
 
 index.php
 scripts.js
