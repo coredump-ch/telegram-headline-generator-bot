@@ -22,25 +22,25 @@
 	/**
 	 * Returns the list of possible following tokens
 	 * 
-	 * @param {array} currentFollowers - The list of tokens to put in the list (index 0: list with tokens following one token, index 1: ... following two tokens, index 2: ... three, index 3: ... four)
-	 * @param {number} index - Which index from currentFollowers should be considered here
-	 * @param {number} multiplicity - How big should the number of returned tokens be, multiplied by the number of tokens of the list with the least tokens
-	 * @param {boolean} noeof - If the tokens 'EOF' and 'PART2' may be in the list
+	 * @param {array} currentFollowers - The list of tokens to put in the list (index 1: list with tokens following two tokens, index 2: ... three, index 3: ... four)
 	 * @return {array} The list
 	 */
-	function getFollowerCollection(currentFollowers, index, multiplicity, noeof) {
-		var singleTokensLength = Object.getOwnPropertyNames(currentFollowers[0]).length || 1;
-		var list = currentFollowers[index];
-		var followerTokens = Object.getOwnPropertyNames(list);
-		var repeats = Math.round((singleTokensLength * multiplicity) / followerTokens.length) || 1;
+	function getFollowerCollection(currentFollowers) {
 		var collection = [];
-		followerTokens.forEach(function(follower) {
-			if (!noeof || follower != 'EOF' && follower != 'PART2') {
-				for (var i = 0; i < list[follower]; i++) {
-					for (var n = 0; n < repeats; n++) {
-						collection.push(follower);
-					}
+		currentFollowers.forEach(function(list) {
+			var newFollowers = [];
+			var followerTokens = Object.getOwnPropertyNames(list);
+			followerTokens.forEach(function(follower) {
+				var repeat = list[follower];
+				for (var i = 0; i < repeat; i++) {
+					newFollowers.push(follower);
 				}
+			});
+			if (newFollowers.length) {
+				var ratio = collection.length / newFollowers.length + 1;
+				for (var i = 0; i < ratio; i++) {
+					collection = collection.concat(newFollowers);
+				};
 			}
 		});
 		return collection;
@@ -63,10 +63,10 @@
 		}
 	
 		var currentFollowers = [];
-		currentFollowers[0] = {};
-		currentFollowers[1] = {};
-		if (lastToken != 'PART2') {
+		if (lastToken == 'SOF') {
 			currentFollowers[0] = followers[lastToken] || {};
+		}
+		if (lastToken != 'PART2') {
 			var doubleToken = history[history.length - 2] + ' ' + lastToken;
 			currentFollowers[1] = followers[doubleToken] || {};
 		}
@@ -75,11 +75,7 @@
 		var quadrupleToken = history[history.length - 4] + ' ' + history[history.length - 3] + ' ' + history[history.length - 2] + ' ' + lastToken;
 		currentFollowers[3] = followers[quadrupleToken] || {};
 		
-		var randomizer = [];
-		randomizer = randomizer.concat(getFollowerCollection(currentFollowers, 0, 1, true));
-		randomizer = randomizer.concat(getFollowerCollection(currentFollowers, 1, 2.5, false));
-		randomizer = randomizer.concat(getFollowerCollection(currentFollowers, 2, 2.5, false));
-		randomizer = randomizer.concat(getFollowerCollection(currentFollowers, 3, 1.5, false));
+		var randomizer = getFollowerCollection(currentFollowers);
 	
 		while (true) {
 			if (!randomizer.length) {

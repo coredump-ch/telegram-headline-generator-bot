@@ -3,7 +3,7 @@
 ?>
 CACHE MANIFEST
 
-# Generator v9
+# Generator v2.1
 # Headlines v24
 
 index.php
