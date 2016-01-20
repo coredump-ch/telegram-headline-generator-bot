@@ -1,4 +1,5 @@
 var TelegramBot = require('node-telegram-bot-api');
+var fs = require('fs');
 var headlineGenerator = require('./headlinegenerator/generator_functions');
 
 var config = require('./config.js');
@@ -25,8 +26,23 @@ bot.onText(/^\/generate(@HeadlineGeneratorBot)?( (\d+))?$/, function(message, ma
   
   for (var i = 0; i < number; i++) {
     setTimeout(function() {
-    	var headlineParts = headlineGenerator.getHeadline(followers, headlines);
-    	bot.sendMessage(chatId, headlineParts[0] + ':\n' + headlineParts[1]);
+      var headlineParts = headlineGenerator.getHeadline(followers, headlines);
+      bot.sendMessage(chatId, headlineParts[0] + ':\n' + headlineParts[1]);
     }, i * 3000);
   }
+});
+
+function tellNoBeta(message, match) {
+  var messageId = message.message_id;
+  var chatId = message.chat.id;
+  bot.sendMessage(chatId, 'Momentan gibt es keinen Beta-Test. Den aktuellen Generator bekommst du mit /generate.', {'reply_to_message_id': messageId});
+}
+
+bot.onText(/^\/generate-beta(@HeadlineGeneratorBot)?/, tellNoBeta);
+bot.onText(/^\/rate(@HeadlineGeneratorBot)?/, tellNoBeta);
+
+var rating = JSON.parse(fs.readFileSync('rating.json', {encoding: 'utf8'}) || '{"goodStable": 0, "goodBeta": 0,   "ratingsStable": 0, "ratingsBeta": 0, "chatStates": {}}');
+bot.onText(/^\/results(@HeadlineGeneratorBot)?$/, function(message, match) {
+  var chatId = message.chat.id;
+  bot.sendMessage(chatId, 'goodStable: ' + rating.goodStable + '\ngoodBeta: ' + rating.goodBeta + '\n\nratingsStable: ' + rating.ratingsStable + '\nratingsBeta: ' + rating.ratingsBeta);
 });
