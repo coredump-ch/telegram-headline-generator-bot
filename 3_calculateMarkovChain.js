@@ -20,7 +20,9 @@ var lastTokens = [];
 tokens.forEach(function(headline) {
 	headline.forEach(function(token, index) {
 		if (token != 'EOF') {
-			addFollowers(token, headline[index + 1]);
+		  if (token == 'SOF') {
+			  addFollowers(token, headline[index + 1]);
+			}
 			if (lastTokens.length > 0) {
 				addFollowers(lastTokens[0] + ' ' + token, headline[index + 1]);
 			}
