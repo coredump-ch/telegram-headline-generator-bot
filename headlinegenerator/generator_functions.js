@@ -1,10 +1,10 @@
 /* MIT licence, (c) 2014-2015 coredump Rapperswil, Jannis Grimm */
 
 (function(exports) {
-	
+
 	/**
 	 * If the token is allowed here
-	 * 
+	 *
 	 * @param {string} token - The token
 	 * @param {boolean} hadPart2 - If the token 'PART2' was used in the headline
 	 * @returns {boolean} The answer
@@ -94,6 +94,9 @@
 					return nextHistory;
 				} else {
 					history.pop();
+					randomizer.filter(function(randomToken) {
+						return randomToken !== token;
+					});
 				}
 			}
 		}
@@ -135,15 +138,22 @@
 	 * @returns {Array} The headline. Index 0 is the first part, index 1 the main part.
 	 */
 	exports.getHeadline = function getHeadline(successors, headlines) {
+		var attempts = 0;
 		do {
+			attempts++;
 			var headlineTokens = getHeadlineTokens(['SOF'], false, successors);
 			var headline = headlineTokens.slice(1, -1).join(' ');
 			var part2Index = headline.indexOf('PART2');
 			var headlinePart1 = fixPart(headline.slice(0, part2Index - 1));
 			var headlinePart2 = fixPart(headline.slice(part2Index + 6));
-		} while (headlines.some(function(headline) {
+		} while (attempts < 20 && headlines.some(function(headline) {
 			return headline.indexOf(headlinePart2) != -1;
 		}));
+		if (headlines.some(function(headline) {
+				return headline.indexOf(headlinePart2) != -1;
+			})) {
+			return ['', ''];
+		}
 
 		return [headlinePart1, headlinePart2];
 	};
@@ -159,17 +169,25 @@
 	 * @returns {Array} The headline. Index 0 is the first part, index 1 the main part.
 	 */
 	exports.getHeadlineWithWord = function getHeadlineWithWord(word, successors, predecessors, headlines, headlineGeneratorBackwards) {
+		var attempts = 0;
+		var success = false;
 		do {
-			var headlineTokensForward = getHeadlineTokens([word], true, successors);
-			var headlineTokensBackward = headlineGeneratorBackwards.getHeadlineTokens([word], false, predecessors);
-			var headlineForward = headlineTokensForward.slice(0, -1).join(' ');
-			var headlineBackward = headlineTokensBackward.slice(1, -1).reverse().join(' ');
-			var part2Index = headlineBackward.indexOf('PART2');
-			var headlinePart1 = fixPart(headlineBackward.slice(0, part2Index - 1));
-			var headlinePart2 = fixPart(headlineBackward.slice(part2Index + 6) + ' ' + headlineForward);
-		} while ((headlinePart1 + headlinePart2).trim() && headlines.some(function(headline) {
+			attempts++;
+			var headlineTokensUntilWord = headlineGeneratorBackwards.getHeadlineTokens([word], attempts > 15, predecessors);
+			var headlineTokens = getHeadlineTokens(headlineTokensUntilWord.slice().reverse(), attempts <= 15, successors);
+			success = headlineTokens[headlineTokens.length - 1][0] === 'EOF';
+			var headline = headlineTokens.slice(1, -1).join(' ');
+			var part2Index = headline.indexOf('PART2');
+			var headlinePart1 = fixPart(headline.slice(0, part2Index - 1));
+			var headlinePart2 = fixPart(headline.slice(part2Index + 6));
+		} while (attempts < 30 && (!success || headlines.some(function(headline) {
 			return headline.indexOf(headlinePart2) != -1;
-		}));
+		})));
+		if (!success || headlines.some(function(headline) {
+				return headline.indexOf(headlinePart2) != -1;
+			})) {
+			return ['', ''];
+		}
 
 		return [headlinePart1, headlinePart2];
 	}

@@ -94,6 +94,9 @@
 					return nextHistory;
 				} else {
 					history.pop();
+					randomizer.filter(function(randomToken) {
+						return randomToken !== token;
+					});
 				}
 			}
 		}
