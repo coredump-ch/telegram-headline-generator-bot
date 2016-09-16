@@ -34,14 +34,14 @@ bot.onText(/^\/generate(@HeadlineGeneratorBot)?( (\d+))?$/, function(message, ma
   }
 });
 
-bot.onText(/^\/generate5(@HeadlineGeneratorBot)?$/, function(message) {
+bot.onText(/^\/generateWithWord(@HeadlineGeneratorBot)?$/, function(message) {
   var chatId = message.chat.id;
-  for (var i = 0; i < 5; i++) {
-    setTimeout(function() {
-      var headlineParts = headlineGenerator.getHeadline(successors, headlines);
-      bot.sendMessage(chatId, headlineParts[0] + ':\n' + headlineParts[1]);
-    }, i * 3000);
-  }
+  bot.sendMessage(chatId, 'Cool, mit welchem Wort?', {
+    reply_to_message_id: message.message_id,
+    reply_markup: {
+      force_reply: true
+    }
+  });
 });
 
 bot.onText(/^[^\/]/, function(message) {
