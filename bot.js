@@ -34,14 +34,26 @@ bot.onText(/^\/generate(@HeadlineGeneratorBot)?( (\d+))?$/, function(message, ma
   }
 });
 
-bot.onText(/^\/generateWithWord(@HeadlineGeneratorBot)?$/, function(message) {
+bot.onText(/^\/generatewithword(@HeadlineGeneratorBot)?( (.*))?$/, function(message, match) {
   var chatId = message.chat.id;
-  bot.sendMessage(chatId, 'Cool, mit welchem Wort?', {
-    reply_to_message_id: message.message_id,
-    reply_markup: {
-      force_reply: true
+  var text = match[3] && match[3].trim();
+  if (!text) {
+    bot.sendMessage(chatId, 'Cool, mit welchem Wort?', {
+      reply_to_message_id: message.message_id,
+      reply_markup: {
+        force_reply: true
+      }
+    });
+  } else if (text.indexOf(' ') !== -1) {
+    bot.sendMessage(chatId, 'Sorry, ich kann nur Schlagzeilen mit genau einem gegebenem Wort oder mit /generate generieren.');
+  } else {
+    var headlineParts = headlineGenerator.getHeadlineWithWord(text, successors, predecessors, headlines, headlineGeneratorBackwards);
+    if ((headlineParts[0] + headlineParts[1]).trim()) {
+      bot.sendMessage(chatId, headlineParts[0] + ':\n' + headlineParts[1]);
+    } else {
+      bot.sendMessage(chatId, 'Sorry, dieses Wort kenne ich nicht.');
     }
-  });
+  }
 });
 
 bot.onText(/^[^\/]/, function(message) {
