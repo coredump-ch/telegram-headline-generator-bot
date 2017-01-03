@@ -66,7 +66,7 @@
 		if (history.length === 1) {
 			currentSuccessors[0] = successors[lastToken] || {};
 		}
-		if (lastToken != 'PART2') {
+		if (lastToken != 'PART2' || history.length < 3) {
 			var doubleToken = history[history.length - 2] + ' ' + lastToken;
 			currentSuccessors[1] = successors[doubleToken] || {};
 		}
@@ -82,7 +82,7 @@
 				return history;
 			}
 			var nextIndex = Math.floor(randomizer.length * Math.random());
-			var token = randomizer.splice(nextIndex, 1);
+			var token = randomizer.splice(nextIndex, 1)[0];
 			if (tokenIsAllowed(token, hadPart2)) {
 				history.push(token);
 				if (token == 'EOF') {
@@ -175,8 +175,8 @@
 			attempts++;
 			var headlineTokensUntilWord = headlineGeneratorBackwards.getHeadlineTokens([word], attempts > 15, predecessors);
 			var headlineTokens = getHeadlineTokens(headlineTokensUntilWord.slice().reverse(), attempts <= 15, successors);
-			success = headlineTokens[headlineTokens.length - 1][0] === 'EOF';
-			var headline = headlineTokens.slice(1, -1).join(' ');
+			success = headlineTokens[headlineTokens.length - 1] === 'EOF';
+      var headline = headlineTokens.slice(1, -1).join(' ');
 			var part2Index = headline.indexOf('PART2');
 			var headlinePart1 = fixPart(headline.slice(0, part2Index - 1));
 			var headlinePart2 = fixPart(headline.slice(part2Index + 6));

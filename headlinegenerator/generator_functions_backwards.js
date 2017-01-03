@@ -66,7 +66,7 @@
 		if (history.length === 1) {
 			currentPredecessors[0] = predecessors[lastToken] || {};
 		}
-		if (lastToken != 'PART2') {
+		if (lastToken != 'PART2' || history.length < 3) {
 			var doubleToken = lastToken + ' ' + history[history.length - 2];
 			currentPredecessors[1] = predecessors[doubleToken] || {};
 		}
@@ -82,7 +82,7 @@
 				return history;
 			}
 			var nextIndex = Math.floor(randomizer.length * Math.random());
-			var token = randomizer.splice(nextIndex, 1);
+			var token = randomizer.splice(nextIndex, 1)[0];
 			if (tokenIsAllowed(token, hadPart2)) {
 				history.push(token);
 				if (token == 'SOF') {
