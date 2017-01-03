@@ -1,46 +1,57 @@
 var fs = require('fs');
 
 var tokens = require('./tokens.json');
+var successors = {};
+var predecessors = {};
 
-var followers = {};
-function addFollowers(token, nextToken) {
-	var thisFollowers = {};
-	if (followers[token]) {
-		thisFollowers = followers[token];
+function addTokenToKey(map, keyToken, token) {
+	var key = keyToken.join(' ');
+	var innerMap = {};
+	if (map[key]) {
+		innerMap = map[key];
 	}
-	if (!thisFollowers[nextToken]) {
-		thisFollowers[nextToken] = 0;
+	if (!innerMap[token]) {
+		innerMap[token] = 0;
 	}
-	thisFollowers[nextToken]++;
-	followers[token] = thisFollowers;
-	console.log(token, followers[token]);
+	innerMap[token]++;
+	map[key] = innerMap;
+	console.log(key, token, innerMap[token]);
 }
 
-var lastTokens = [];
+function addSuccessor(lastTokens) {
+	var token = lastTokens[lastTokens.length - 1];
+	var predecessorTokens = lastTokens.slice(0, -1);
+	while(predecessorTokens.length >= 1) {
+		addTokenToKey(successors, predecessorTokens, token);
+		predecessorTokens = predecessorTokens.slice(1);
+	}
+}
+
+function addPredecessor(lastTokens) {
+	var token = lastTokens[0];
+	var successorTokens = lastTokens.slice(1);
+	while(successorTokens.length >= 1) {
+		addTokenToKey(predecessors, successorTokens, token);
+		token = successorTokens[0];
+		successorTokens = successorTokens.slice(1);
+	}
+}
+
 tokens.forEach(function(headline) {
-	headline.forEach(function(token, index) {
-		if (token != 'EOF') {
-		  if (token == 'SOF') {
-			  addFollowers(token, headline[index + 1]);
-			}
-			if (lastTokens.length > 0) {
-				addFollowers(lastTokens[0] + ' ' + token, headline[index + 1]);
-			}
-			if (lastTokens.length > 1) {
-				addFollowers(lastTokens[1] + ' ' + lastTokens[0] + ' ' + token, headline[index + 1]);
-			}
-			if (lastTokens.length > 2) {
-				addFollowers(lastTokens[2] + ' ' + lastTokens[1] + ' ' + lastTokens[0] + ' ' + token, headline[index + 1]);
-			}
-			lastTokens.unshift(token);
-			if (lastTokens.length > 3) {
-				lastTokens.pop();
-			}
+	var lastTokens = [];
+	headline.forEach(function(token) {
+		lastTokens.push(token);
+		if (lastTokens.length > 5) {
+			lastTokens = lastTokens.slice(1);
+		}
+		if (token !== 'SOF') {
+			addSuccessor(lastTokens);
+			addPredecessor(lastTokens);
 		}
 	});
-	lastToken = null;
 });
-fs.writeFile('followers.json', JSON.stringify(followers));
+fs.writeFile('successors.json', JSON.stringify(successors));
+fs.writeFile('predecessors.json', JSON.stringify(predecessors));
 
 console.log('===========');
 console.log(tokens.length + ' Schlagzeilen analysiert.');

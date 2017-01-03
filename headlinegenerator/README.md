@@ -1,7 +1,7 @@
 # HeadlineGenerator
 Markov Chain Headline Generator
 
-Demo on http://gje.ch/headlines/ (needs some time to load because of 30mb of headlines)
+Demo on http://gje.ch/headlines/ (needs some time to load because of 40 MB of headlines)
 
 ## Description
 Headline Generator nimmt die Schlagzeilen einer Schweizer Abendzeitung und analysiert sie
